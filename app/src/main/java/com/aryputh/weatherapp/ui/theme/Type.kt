@@ -9,9 +9,8 @@ import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 
 val MyCustomFont = FontFamily(
-    Font(R.font.montserrat_regular),
-    Font(R.font.montserrat_medium, FontWeight.Medium),
-    Font(R.font.montserrat_semibold, FontWeight.Bold)
+    Font(R.font.roboto_mono_normal, FontWeight.Normal),
+    Font(R.font.roboto_mono_medium, FontWeight.Medium)
 )
 
 // Set of Material typography styles to start with
@@ -19,7 +18,7 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = MyCustomFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 15.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
