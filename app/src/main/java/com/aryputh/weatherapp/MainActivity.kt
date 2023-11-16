@@ -10,7 +10,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,8 +20,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,28 +27,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aryputh.weatherapp.ui.theme.DarkPurple
-import com.aryputh.weatherapp.ui.theme.Purple40
-import com.aryputh.weatherapp.ui.theme.VeryLightGray
 import com.aryputh.weatherapp.ui.theme.WeatherAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WeatherAppTheme (
-                dynamicColor = false
-            ){
+            WeatherAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ) {
+                ){
                     WeatherPage()
                 }
             }
@@ -95,13 +89,13 @@ fun MainInfo(modifier: Modifier = Modifier)
     ){
         Text(
             text = "11°",
-            color = DarkPurple,
-            fontSize = 48.sp,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 60.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = "Pullman, WA",
-            color = DarkPurple,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
             modifier = modifier
@@ -110,7 +104,7 @@ fun MainInfo(modifier: Modifier = Modifier)
         Text(
             text = "Rainy with a chance of rain.\nHigh winds ~10-15 mph.",
             color = Color.Gray,
-            fontSize = 15.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Center,
             modifier = modifier
@@ -188,20 +182,20 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, modifie
             contentDescription = null,
             contentScale = ContentScale.Inside,
             modifier = modifier
-                .padding(end = 8.dp)
+                .padding(end = 16.dp)
                 .width(40.dp)
         )
         Column {
             Text(
                 text = title,
-                color = DarkPurple,
-                fontSize = 17.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = subtitle,
                 color = Color.Gray,
-                fontSize = 15.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Normal
             )
         }
@@ -210,8 +204,13 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, modifie
 
 @Preview(showBackground = true, widthDp = 390, heightDp = 800)
 @Composable
-fun GreetingPreview() {
+fun WeatherAppPreview() {
     WeatherAppTheme {
-        WeatherPage()
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ){
+            WeatherPage()
+        }
     }
 }
