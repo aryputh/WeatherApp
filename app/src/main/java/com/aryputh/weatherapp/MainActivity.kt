@@ -96,8 +96,8 @@ fun GradientBackground(modifier: Modifier = Modifier) {
 fun HeaderImage(modifier: Modifier = Modifier)
 {
     Image(
-        painter = painterResource(id = R.drawable.day_partly_cloudy),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        painter = painterResource(id = R.drawable.night_snow),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary.copy(0.9F)),
         contentDescription = null,
         modifier = modifier
             .width(175.dp)
