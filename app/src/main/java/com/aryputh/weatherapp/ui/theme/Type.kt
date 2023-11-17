@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 
-val MyCustomFont = FontFamily(
+val roboto_mono_family = FontFamily(
     Font(R.font.roboto_mono_normal, FontWeight.Normal),
     Font(R.font.roboto_mono_medium, FontWeight.Medium)
 )
@@ -16,24 +16,26 @@ val MyCustomFont = FontFamily(
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = MyCustomFont,
+        fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 15.sp,
+        fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
+    )
+    /* Other default text styles to override
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
     ),
-    displayLarge = TextStyle(fontFamily = MyCustomFont),
-    displayMedium = TextStyle(fontFamily = MyCustomFont),
-    displaySmall = TextStyle(fontFamily = MyCustomFont),
-    headlineLarge = TextStyle(fontFamily = MyCustomFont),
-    headlineMedium = TextStyle(fontFamily = MyCustomFont),
-    headlineSmall = TextStyle(fontFamily = MyCustomFont),
-    titleLarge = TextStyle(fontFamily = MyCustomFont),
-    titleMedium = TextStyle(fontFamily = MyCustomFont),
-    titleSmall = TextStyle(fontFamily = MyCustomFont),
-    bodyMedium = TextStyle(fontFamily = MyCustomFont),
-    bodySmall = TextStyle(fontFamily = MyCustomFont),
-    labelLarge = TextStyle(fontFamily = MyCustomFont),
-    labelMedium = TextStyle(fontFamily = MyCustomFont),
-    labelSmall = TextStyle(fontFamily = MyCustomFont)
+    labelSmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    )
+    */
 )

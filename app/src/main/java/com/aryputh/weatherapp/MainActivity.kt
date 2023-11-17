@@ -28,8 +28,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ import com.aryputh.weatherapp.ui.theme.Sunrise
 import com.aryputh.weatherapp.ui.theme.Sunset
 import com.aryputh.weatherapp.ui.theme.UVIndex
 import com.aryputh.weatherapp.ui.theme.WeatherAppTheme
+import com.aryputh.weatherapp.ui.theme.roboto_mono_family
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +73,8 @@ fun WeatherPage(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .padding(top = 64.dp, bottom = 64.dp, start = 16.dp, end = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
     ){
         HeaderImage()
         MainInfo()
@@ -92,11 +96,12 @@ fun GradientBackground(modifier: Modifier = Modifier) {
 fun HeaderImage(modifier: Modifier = Modifier)
 {
     Image(
-        painter = painterResource(id = R.drawable.header_image),
+        painter = painterResource(id = R.drawable.day_partly_cloudy),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
         contentDescription = null,
         modifier = modifier
-            .width(250.dp)
-            .height(250.dp)
+            .width(175.dp)
+            .height(175.dp)
     )
 }
 
@@ -105,31 +110,80 @@ fun MainInfo(modifier: Modifier = Modifier)
 {
     Column (
         modifier = modifier
-            .padding(vertical = 24.dp),
+            .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(
-            text = "11°",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 60.sp,
-            fontWeight = FontWeight.Medium
-        )
+        Row {
+            Text(
+                text = "37",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 70.sp,
+                fontFamily = roboto_mono_family,
+                fontWeight = FontWeight.Normal,
+                style = TextStyle(
+                    shadow = Shadow(
+                        color = Color.DarkGray,
+                        blurRadius = 5f
+                    )
+                )
+            )
+            Text(
+                text = "°F",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 30.sp,
+                fontFamily = roboto_mono_family,
+                fontWeight = FontWeight.Normal,
+                style = TextStyle(
+                    shadow = Shadow(
+                        color = Color.DarkGray,
+                        blurRadius = 5f
+                    )
+                ),
+                modifier = modifier
+                    .padding(vertical = 16.dp)
+            )
+        }
         Text(
             text = "Pullman, WA",
             color = MaterialTheme.colorScheme.primary,
-            fontSize = 20.sp,
+            fontSize = 15.sp,
+            fontFamily = roboto_mono_family,
             fontWeight = FontWeight.Medium,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.DarkGray,
+                    blurRadius = 2f
+                )
+            ),
             modifier = modifier
-                .padding(vertical = 16.dp)
+                .padding(bottom = 32.dp)
         )
-        Text(
-            text = "Rainy with a chance of rain.\nHigh winds ~10-15 mph.",
-            color =
-                if (isSystemInDarkTheme()) DarkSecondary else LightSecondary,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center
-        )
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(
+                        alpha = 0.2F
+                    )
+                )
+        ){
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = modifier
+                    .padding(vertical = 16.dp, horizontal = 32.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Rainy with a chance of rain.\nHigh winds ~10-15 mph.",
+                    color = if (isSystemInDarkTheme()) DarkSecondary else LightSecondary,
+                    fontSize = 13.sp,
+                    fontFamily = roboto_mono_family,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
 
@@ -149,7 +203,7 @@ fun ItemTable(modifier: Modifier = Modifier)
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier
-                .padding(16.dp)
+                .padding(vertical = 8.dp, horizontal = 32.dp)
                 .fillMaxWidth()
         ){
             InfoItem(
@@ -169,7 +223,7 @@ fun ItemTable(modifier: Modifier = Modifier)
         }
 
         Divider(
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.primary,
             modifier = modifier
                 .padding(horizontal = 16.dp)
                 .alpha(0.5F)
@@ -178,7 +232,7 @@ fun ItemTable(modifier: Modifier = Modifier)
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier
-                .padding(16.dp)
+                .padding(vertical = 8.dp, horizontal = 32.dp)
                 .fillMaxWidth()
         ){
             InfoItem(
@@ -212,25 +266,27 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
             contentScale = ContentScale.Inside,
             modifier = modifier
                 .padding(horizontal = 8.dp)
-                .width(40.dp)
+                .width(35.dp)
         )
         Column {
             Text(
                 text = title,
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 15.sp,
+                fontSize = 13.sp,
+                fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Medium,
                 modifier = modifier
-                    .padding(horizontal = 8.dp)
+                    .padding(top = 8.dp)
             )
             Text(
                 text = subtitle,
                 color =
                     if (isSystemInDarkTheme()) DarkSecondary else LightSecondary,
                 fontSize = 13.sp,
+                fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Normal,
                 modifier = modifier
-                    .padding(horizontal = 8.dp)
+                    .padding(bottom = 8.dp)
             )
         }
     }
