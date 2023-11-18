@@ -158,32 +158,6 @@ fun MainInfo(modifier: Modifier = Modifier)
             modifier = modifier
                 .padding(bottom = 32.dp)
         )
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .background(
-                    if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(
-                        alpha = 0.2F
-                    )
-                )
-        ){
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = modifier
-                    .padding(vertical = 16.dp, horizontal = 32.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Rainy with a chance of rain.\nHigh winds ~10-15 mph.",
-                    color = if (isSystemInDarkTheme()) DarkSecondary else LightSecondary,
-                    fontSize = 13.sp,
-                    fontFamily = roboto_mono_family,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
     }
 }
 
@@ -195,9 +169,7 @@ fun ItemTable(modifier: Modifier = Modifier)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(
-                    alpha = 0.2F
-                )
+                if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(alpha = 0.2F)
             )
     ){
         Row(
@@ -223,7 +195,7 @@ fun ItemTable(modifier: Modifier = Modifier)
         }
 
         Divider(
-            color = MaterialTheme.colorScheme.primary,
+            color = if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(alpha = 0.2F),
             modifier = modifier
                 .padding(horizontal = 16.dp)
                 .alpha(0.5F)
