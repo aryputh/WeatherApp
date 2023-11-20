@@ -128,7 +128,7 @@ fun MainInfo(modifier: Modifier = Modifier)
                 )
             )
             Text(
-                text = "°F",
+                text = "°C",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 30.sp,
                 fontFamily = roboto_mono_family,
