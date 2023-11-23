@@ -1,6 +1,7 @@
-package com.aryputh.weatherapp
+package com.aryputh.weatherapp.domain.weather
 
 import androidx.annotation.DrawableRes
+import com.aryputh.weatherapp.R
 
 sealed class WeatherTypes (val weatherDesc: String, @DrawableRes val iconRes: Int){
     object Clear : WeatherTypes(

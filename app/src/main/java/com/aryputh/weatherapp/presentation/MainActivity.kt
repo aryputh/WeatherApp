@@ -1,8 +1,12 @@
-package com.aryputh.weatherapp
+package com.aryputh.weatherapp.presentation
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,10 +38,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aryputh.weatherapp.R
+import com.aryputh.weatherapp.domain.weather.WeatherData
 import com.aryputh.weatherapp.ui.theme.DarkBackground
 import com.aryputh.weatherapp.ui.theme.DarkSecondary
 import com.aryputh.weatherapp.ui.theme.Humidity
@@ -47,10 +52,27 @@ import com.aryputh.weatherapp.ui.theme.Sunset
 import com.aryputh.weatherapp.ui.theme.UVIndex
 import com.aryputh.weatherapp.ui.theme.WeatherAppTheme
 import com.aryputh.weatherapp.ui.theme.roboto_mono_family
+import dagger.hilt.android.AndroidEntryPoint
+import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: WeatherViewModel by viewModels()
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            viewModel.loadWeatherInfo()
+        }
+        permissionLauncher.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        ))
         setContent {
             WeatherAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -60,7 +82,26 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ){
                     GradientBackground()
-                    WeatherPage()
+                    WeatherPage(viewModel.state, viewModel)
+
+                    if(viewModel.state.isLoading) {
+                        CircularProgressIndicator()
+                    }
+                    viewModel.state.error?.let { error ->
+                        Text(
+                            text = error,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 15.sp,
+                            fontFamily = roboto_mono_family,
+                            fontWeight = FontWeight.Medium,
+                            style = TextStyle(
+                                shadow = Shadow(
+                                    color = Color.DarkGray,
+                                    blurRadius = 2f
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -68,7 +109,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun WeatherPage(modifier: Modifier = Modifier) {
+fun WeatherPage(state: WeatherState, viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -76,9 +117,11 @@ fun WeatherPage(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ){
-        HeaderImage()
-        MainInfo()
-        ItemTable()
+        state.weatherInfo?.currentWeatherData?.let { data ->
+            HeaderImage(data)
+            MainInfo(data)
+            ItemTable(data)
+        }
     }
 }
 
@@ -93,10 +136,10 @@ fun GradientBackground(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HeaderImage(modifier: Modifier = Modifier)
+fun HeaderImage (data: WeatherData, modifier: Modifier = Modifier)
 {
     Image(
-        painter = painterResource(id = R.drawable.night_snow),
+        painter = painterResource(id = data.weatherType.iconRes),
         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary.copy(0.9F)),
         contentDescription = null,
         modifier = modifier
@@ -106,7 +149,7 @@ fun HeaderImage(modifier: Modifier = Modifier)
 }
 
 @Composable
-fun MainInfo(modifier: Modifier = Modifier)
+fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
 {
     Column (
         modifier = modifier
@@ -115,7 +158,7 @@ fun MainInfo(modifier: Modifier = Modifier)
     ){
         Row {
             Text(
-                text = "37",
+                text = "${data.temperatureCelsius}",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 70.sp,
                 fontFamily = roboto_mono_family,
@@ -144,7 +187,7 @@ fun MainInfo(modifier: Modifier = Modifier)
             )
         }
         Text(
-            text = "Pullman, WA",
+            text = data.weatherType.weatherDesc,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 15.sp,
             fontFamily = roboto_mono_family,
@@ -162,14 +205,16 @@ fun MainInfo(modifier: Modifier = Modifier)
 }
 
 @Composable
-fun ItemTable(modifier: Modifier = Modifier)
+fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
 {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(alpha = 0.2F)
+                if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(
+                    alpha = 0.2F
+                )
             )
     ){
         Row(
@@ -181,14 +226,14 @@ fun ItemTable(modifier: Modifier = Modifier)
             InfoItem(
                 iconRes = R.drawable.humidity,
                 title = "Humidity",
-                subtitle = "85%",
+                subtitle = "${data.humidity.roundToInt()}",
                 color = Humidity,
                 modifier = modifier
             )
             InfoItem(
                 iconRes = R.drawable.uv_index,
-                title = "UV Index",
-                subtitle = "2 of 10",
+                title = "Cloud Cover",
+                subtitle = "${data.cloudCover.roundToInt()}",
                 color = UVIndex,
                 modifier = modifier
             )
@@ -210,14 +255,14 @@ fun ItemTable(modifier: Modifier = Modifier)
             InfoItem(
                 iconRes = R.drawable.sunrise,
                 title = "Sunrise ",
-                subtitle = "7:30 AM",
+                subtitle = data.sunrise,
                 color = Sunrise,
                 modifier = modifier
             )
             InfoItem(
                 iconRes = R.drawable.sunset,
                 title = "Sunset  ",
-                subtitle = "4:28 PM",
+                subtitle = data.sunset,
                 color = Sunset,
                 modifier = modifier
             )
@@ -260,21 +305,6 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
                 modifier = modifier
                     .padding(bottom = 8.dp)
             )
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 390, heightDp = 800)
-@Composable
-fun WeatherAppPreview() {
-    WeatherAppTheme {
-        Surface(
-            modifier = Modifier
-                .fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ){
-            GradientBackground()
-            WeatherPage()
         }
     }
 }

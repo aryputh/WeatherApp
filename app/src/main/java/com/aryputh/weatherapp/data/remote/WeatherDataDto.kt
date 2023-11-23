@@ -7,15 +7,15 @@ data class WeatherDataDto(
     @field:Json(name = "temperature_2m")
     val temperature: List<Double>,
     @field:Json(name = "relative_humidity_2m")
-    val humidity: List<Int>,
+    val humidity: List<Double>,
     @field:Json(name = "is_day")
-    val isDay: List<Double>,
+    val isDay: List<Int>,
     @field:Json(name = "weather_code")
-    val weatherCode: List<Double>,
+    val weatherCode: List<Int>,
     @field:Json(name = "cloud_cover")
     val cloudCover: List<Double>,
     @field:Json(name = "sunrise")
-    val sunrise: List<Double>,
+    val sunrise: List<String>,
     @field:Json(name = "sunset")
-    val sunset: List<Double>
+    val sunset: List<String>
 )
