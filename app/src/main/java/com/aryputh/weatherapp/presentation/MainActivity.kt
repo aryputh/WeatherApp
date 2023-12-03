@@ -42,18 +42,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 import com.aryputh.weatherapp.domain.weather.WeatherData
-import com.aryputh.weatherapp.ui.theme.DarkBackground
-import com.aryputh.weatherapp.ui.theme.DarkSecondary
-import com.aryputh.weatherapp.ui.theme.Humidity
-import com.aryputh.weatherapp.ui.theme.LightBackground
-import com.aryputh.weatherapp.ui.theme.LightSecondary
-import com.aryputh.weatherapp.ui.theme.Sunrise
-import com.aryputh.weatherapp.ui.theme.Sunset
-import com.aryputh.weatherapp.ui.theme.UVIndex
-import com.aryputh.weatherapp.ui.theme.WeatherAppTheme
-import com.aryputh.weatherapp.ui.theme.roboto_mono_family
+import com.aryputh.weatherapp.presentation.ui.theme.DarkBackground
+import com.aryputh.weatherapp.presentation.ui.theme.DarkSecondary
+import com.aryputh.weatherapp.presentation.ui.theme.Humidity
+import com.aryputh.weatherapp.presentation.ui.theme.LightBackground
+import com.aryputh.weatherapp.presentation.ui.theme.LightSecondary
+import com.aryputh.weatherapp.presentation.ui.theme.Sunrise
+import com.aryputh.weatherapp.presentation.ui.theme.Sunset
+import com.aryputh.weatherapp.presentation.ui.theme.UVIndex
+import com.aryputh.weatherapp.presentation.ui.theme.WeatherAppTheme
+import com.aryputh.weatherapp.presentation.ui.theme.roboto_mono_family
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -136,11 +135,11 @@ fun HeaderImage (data: WeatherData, modifier: Modifier = Modifier)
 {
     Image(
         painter = painterResource(id = data.weatherType.iconRes),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary.copy(0.9F)),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
         contentDescription = null,
         modifier = modifier
-            .width(175.dp)
-            .height(175.dp)
+            .width(200.dp)
+            .height(200.dp)
     )
 }
 
@@ -156,7 +155,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
             Text(
                 text = "${(data.temperatureCelsius * 9 / 5 + 32).toInt()}",
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 70.sp,
+                fontSize = 90.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Normal,
                 style = TextStyle(
@@ -166,21 +165,21 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
                     )
                 )
             )
-            Text(
-                text = "°F",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 30.sp,
-                fontFamily = roboto_mono_family,
-                fontWeight = FontWeight.Normal,
-                style = TextStyle(
-                    shadow = Shadow(
-                        color = Color.DarkGray,
-                        blurRadius = 5f
-                    )
-                ),
-                modifier = modifier
-                    .padding(vertical = 16.dp)
-            )
+//            Text(
+//                text = "°F",
+//                color = MaterialTheme.colorScheme.primary,
+//                fontSize = 30.sp,
+//                fontFamily = roboto_mono_family,
+//                fontWeight = FontWeight.Normal,
+//                style = TextStyle(
+//                    shadow = Shadow(
+//                        color = Color.DarkGray,
+//                        blurRadius = 5f
+//                    )
+//                ),
+//                modifier = modifier
+//                    .padding(vertical = 16.dp)
+//            )
         }
         Text(
             text = data.weatherType.weatherDesc,
@@ -227,8 +226,8 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 modifier = modifier
             )
             InfoItem(
-                iconRes = R.drawable.uv_index,
-                title = "Cloud Cover",
+                iconRes = R.drawable.cloud_cover,
+                title = "Clouds  ",
                 subtitle = "${data.cloudCover.roundToInt()}%",
                 color = UVIndex,
                 modifier = modifier
@@ -278,7 +277,7 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
             contentDescription = null,
             contentScale = ContentScale.Inside,
             modifier = modifier
-                .padding(horizontal = 8.dp)
+                .padding(end = 8.dp)
                 .width(35.dp)
         )
         Column {
