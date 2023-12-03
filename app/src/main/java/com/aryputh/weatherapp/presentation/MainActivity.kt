@@ -85,21 +85,17 @@ class MainActivity : ComponentActivity() {
                     WeatherPage(viewModel.state, viewModel)
 
                     if(viewModel.state.isLoading) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                     viewModel.state.error?.let { error ->
                         Text(
                             text = error,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 15.sp,
+                            color = Color.Red,
+                            fontSize = 13.sp,
                             fontFamily = roboto_mono_family,
-                            fontWeight = FontWeight.Medium,
-                            style = TextStyle(
-                                shadow = Shadow(
-                                    color = Color.DarkGray,
-                                    blurRadius = 2f
-                                )
-                            )
+                            fontWeight = FontWeight.Normal
                         )
                     }
                 }
@@ -158,7 +154,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
     ){
         Row {
             Text(
-                text = "${data.temperatureCelsius}",
+                text = "${(data.temperatureCelsius * 9 / 5 + 32).toInt()}",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 70.sp,
                 fontFamily = roboto_mono_family,
@@ -171,7 +167,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
                 )
             )
             Text(
-                text = "°C",
+                text = "°F",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 30.sp,
                 fontFamily = roboto_mono_family,
@@ -226,14 +222,14 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
             InfoItem(
                 iconRes = R.drawable.humidity,
                 title = "Humidity",
-                subtitle = "${data.humidity.roundToInt()}",
+                subtitle = "${data.humidity.roundToInt()}%",
                 color = Humidity,
                 modifier = modifier
             )
             InfoItem(
                 iconRes = R.drawable.uv_index,
                 title = "Cloud Cover",
-                subtitle = "${data.cloudCover.roundToInt()}",
+                subtitle = "${data.cloudCover.roundToInt()}%",
                 color = UVIndex,
                 modifier = modifier
             )

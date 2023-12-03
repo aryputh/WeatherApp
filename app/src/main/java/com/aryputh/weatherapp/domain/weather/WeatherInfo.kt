@@ -1,7 +1,6 @@
 package com.aryputh.weatherapp.domain.weather
 
-class WeatherInfo (
-    val weatherDataPerDay: Map<Int, List<WeatherData>>,
+data class WeatherInfo(
     val currentWeatherData: WeatherData?,
     val dailyWeatherData: WeatherData?
 )
