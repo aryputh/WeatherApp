@@ -8,6 +8,7 @@ import com.aryputh.weatherapp.domain.weather.WeatherData
 import com.aryputh.weatherapp.domain.weather.WeatherInfo
 import com.aryputh.weatherapp.domain.weather.WeatherTypes
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 private data class IndexedWeatherData(
@@ -50,11 +51,26 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
     val dailySunrise = dailyWeatherData.sunrise;
     val dailySunset = dailyWeatherData.sunset;
 
+    val formattedSunrise = parseAndFormatDateTime(dailySunrise?.firstOrNull() ?: "NULL")
+    val formattedSunset = parseAndFormatDateTime(dailySunset?.firstOrNull() ?: "NULL")
+
     return WeatherInfo(
         currentWeatherData = currentWeatherDataMap.copy(
-            sunrise = dailySunrise?.firstOrNull() ?: "NULL",
-            sunset = dailySunset?.firstOrNull() ?: "NULL"
+            sunrise = formattedSunrise,
+            sunset = formattedSunset
         ),
         dailyWeatherData = dailyWeatherDataMap
     )
+}
+
+fun parseAndFormatDateTime(dateTimeString: String?): String {
+    return try {
+        val parsedDateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ISO_DATE_TIME)
+
+        val formattedTime = DateTimeFormatter.ofPattern("h:mm a").format(parsedDateTime.toLocalTime())
+
+        formattedTime
+    } catch (e: Exception) {
+        "NULL"
+    }
 }
