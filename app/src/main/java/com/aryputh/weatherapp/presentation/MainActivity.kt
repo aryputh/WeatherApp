@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
@@ -157,42 +158,15 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 90.sp,
                 fontFamily = roboto_mono_family,
-                fontWeight = FontWeight.Normal,
-                style = TextStyle(
-                    shadow = Shadow(
-                        color = Color.DarkGray,
-                        blurRadius = 5f
-                    )
-                )
+                fontWeight = FontWeight.Normal
             )
-//            Text(
-//                text = "°F",
-//                color = MaterialTheme.colorScheme.primary,
-//                fontSize = 30.sp,
-//                fontFamily = roboto_mono_family,
-//                fontWeight = FontWeight.Normal,
-//                style = TextStyle(
-//                    shadow = Shadow(
-//                        color = Color.DarkGray,
-//                        blurRadius = 5f
-//                    )
-//                ),
-//                modifier = modifier
-//                    .padding(vertical = 16.dp)
-//            )
         }
         Text(
             text = data.weatherType.weatherDesc,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 15.sp,
             fontFamily = roboto_mono_family,
-            fontWeight = FontWeight.Medium,
-            style = TextStyle(
-                shadow = Shadow(
-                    color = Color.DarkGray,
-                    blurRadius = 2f
-                )
-            ),
+            fontWeight = FontWeight.Bold,
             modifier = modifier
                 .padding(bottom = 32.dp)
         )
@@ -204,7 +178,7 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
 {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(0.9f)
             .clip(RoundedCornerShape(8.dp))
             .background(
                 if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(
@@ -227,7 +201,7 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
             )
             InfoItem(
                 iconRes = R.drawable.cloud_cover,
-                title = "Clouds  ",
+                title = "Clouds",
                 subtitle = "${data.cloudCover.roundToInt()}%",
                 color = UVIndex,
                 modifier = modifier
@@ -249,14 +223,14 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
         ){
             InfoItem(
                 iconRes = R.drawable.sunrise,
-                title = "Sunrise ",
+                title = "Sunrise",
                 subtitle = data.sunrise,
                 color = Sunrise,
                 modifier = modifier
             )
             InfoItem(
                 iconRes = R.drawable.sunset,
-                title = "Sunset  ",
+                title = "Sunset",
                 subtitle = data.sunset,
                 color = Sunset,
                 modifier = modifier
@@ -277,8 +251,8 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
             contentDescription = null,
             contentScale = ContentScale.Inside,
             modifier = modifier
-                .padding(end = 8.dp)
-                .width(35.dp)
+                .padding(horizontal = 8.dp)
+                .width(40.dp)
         )
         Column {
             Text(
@@ -286,7 +260,7 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 13.sp,
                 fontFamily = roboto_mono_family,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 modifier = modifier
                     .padding(top = 8.dp)
             )

@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 
 val roboto_mono_family = FontFamily(
-    Font(R.font.roboto_mono_normal, FontWeight.Normal),
-    Font(R.font.roboto_mono_medium, FontWeight.Medium)
+    Font(R.font.manrope_regular, FontWeight.Normal),
+    Font(R.font.manrope_bold, FontWeight.Bold)
 )
 
 // Set of Material typography styles to start with

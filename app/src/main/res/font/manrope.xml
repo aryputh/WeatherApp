@@ -3,9 +3,9 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="300"
-        android:font="@font/roboto_mono_normal" />
+        android:font="@font/manrope_regular" />
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/roboto_mono_medium" />
+        android:font="@font/manrope_bold" />
 </font-family>
