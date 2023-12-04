@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 // Dark theme colors
-val DarkPrimary = Color(0xFFF5F5F5)
+val DarkPrimary = Color(0xFFF0F0F0)
 val DarkSecondary = Color(0xFFE0E0E0)
 val DarkUpperBackground = Color(0xFF8385D5)
 val DarkLowerBackground = Color(0xFF959BE5)
@@ -15,7 +15,7 @@ val DarkBackground = Brush.verticalGradient(
 )
 
 // Light theme colors
-val LightPrimary = Color(0xFFF5F5F5)
+val LightPrimary = Color(0xFFF0F0F0)
 val LightSecondary = Color(0xFFE0E0E0)
 val LightUpperBackground = Color(0xFF68A6B9)
 val LightLowerBackground = Color(0xFF4FA7C2)
@@ -26,7 +26,7 @@ val LightBackground = Brush.verticalGradient(
 )
 
 // Icon colors
-val Humidity = Color(0xFF8ECAE6)
-val UVIndex = Color(0xFFF5F5F5)
-val Sunrise = Color(0xFFF4A261)
-val Sunset = Color(0xFFE76F51)
+val Humidity = Color(0xFFF0F0F0)
+val UVIndex = Color(0xFFF0F0F0)
+val Sunrise = Color(0xFFF0F0F0)
+val Sunset = Color(0xFFF0F0F0)

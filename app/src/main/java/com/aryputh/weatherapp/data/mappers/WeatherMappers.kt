@@ -26,7 +26,7 @@ fun DailyWeatherDataDto.toWeatherData(): WeatherData {
         cloudCover = 0.0,
         sunrise = sunrise.firstOrNull() ?: "NULL",
         sunset = sunset.firstOrNull() ?: "NULL",
-        weatherType = WeatherTypes.Clear
+        weatherType = WeatherTypes.DayClear
     )
 }
 
@@ -40,7 +40,7 @@ fun WeatherDataDto.toWeatherData(): WeatherData {
         cloudCover = cloudCover,
         sunrise = sunrise?.firstOrNull() ?: "NULL",
         sunset = sunset?.firstOrNull() ?: "NULL",
-        weatherType = WeatherTypes.fromWMO(weatherCode)
+        weatherType = WeatherTypes.fromWMO(weatherCode, isDay)
     )
 }
 

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,20 +34,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 import com.aryputh.weatherapp.domain.weather.WeatherData
 import com.aryputh.weatherapp.presentation.ui.theme.DarkBackground
+import com.aryputh.weatherapp.presentation.ui.theme.DarkPrimary
 import com.aryputh.weatherapp.presentation.ui.theme.DarkSecondary
 import com.aryputh.weatherapp.presentation.ui.theme.Humidity
 import com.aryputh.weatherapp.presentation.ui.theme.LightBackground
+import com.aryputh.weatherapp.presentation.ui.theme.LightPrimary
 import com.aryputh.weatherapp.presentation.ui.theme.LightSecondary
 import com.aryputh.weatherapp.presentation.ui.theme.Sunrise
 import com.aryputh.weatherapp.presentation.ui.theme.Sunset
@@ -85,17 +85,35 @@ class MainActivity : ComponentActivity() {
                     WeatherPage(viewModel.state)
 
                     if(viewModel.state.isLoading) {
-                        CircularProgressIndicator(
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(64.dp),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Loading...",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 15.sp,
+                                fontFamily = roboto_mono_family,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(top = 16.dp)
+                            )
+                        }
                     }
                     viewModel.state.error?.let { error ->
                         Text(
                             text = error,
-                            color = Color.Red,
-                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 15.sp,
                             fontFamily = roboto_mono_family,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier
+                                .padding(all = 32.dp)
                         )
                     }
                 }
@@ -162,7 +180,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
             )
         }
         Text(
-            text = data.weatherType.weatherDesc,
+            text = "~ ${data.weatherType.weatherDesc} ~",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 15.sp,
             fontFamily = roboto_mono_family,
@@ -181,9 +199,8 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
             .fillMaxWidth(0.9f)
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(
-                    alpha = 0.2F
-                )
+//                if (isSystemInDarkTheme()) DarkPrimary.copy(alpha = 0.3F) else LightPrimary.copy(alpha = 0.3F)
+                Color.Transparent
             )
     ){
         Row(
@@ -209,7 +226,8 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
         }
 
         Divider(
-            color = if (isSystemInDarkTheme()) Color.Black.copy(alpha = 0.2F) else Color.LightGray.copy(alpha = 0.2F),
+//            color = if (isSystemInDarkTheme()) DarkPrimary.copy(alpha = 0.5F) else LightPrimary.copy(alpha = 0.5F),
+            color = LightPrimary.copy(alpha = 0.5F),
             modifier = modifier
                 .padding(horizontal = 16.dp)
                 .alpha(0.5F)
