@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ){
                     GradientBackground()
-                    WeatherPage(viewModel.state, viewModel)
+                    WeatherPage(viewModel.state)
 
                     if(viewModel.state.isLoading) {
                         CircularProgressIndicator(
@@ -105,7 +105,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun WeatherPage(state: WeatherState, viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
+fun WeatherPage(state: WeatherState, modifier: Modifier = Modifier) {
     Column (
         modifier = modifier
             .fillMaxSize()
