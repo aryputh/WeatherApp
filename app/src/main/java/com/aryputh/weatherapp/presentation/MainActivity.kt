@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 import com.aryputh.weatherapp.domain.weather.WeatherData
 import com.aryputh.weatherapp.presentation.ui.theme.DarkBackground
-import com.aryputh.weatherapp.presentation.ui.theme.DarkPrimary
 import com.aryputh.weatherapp.presentation.ui.theme.DarkSecondary
 import com.aryputh.weatherapp.presentation.ui.theme.Humidity
 import com.aryputh.weatherapp.presentation.ui.theme.LightBackground
