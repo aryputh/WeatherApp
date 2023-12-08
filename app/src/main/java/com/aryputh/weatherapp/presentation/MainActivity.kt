@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,11 +41,10 @@ import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 import com.aryputh.weatherapp.domain.weather.WeatherData
 import com.aryputh.weatherapp.presentation.ui.theme.DarkBackground
-import com.aryputh.weatherapp.presentation.ui.theme.DarkSecondary
 import com.aryputh.weatherapp.presentation.ui.theme.Humidity
 import com.aryputh.weatherapp.presentation.ui.theme.LightBackground
-import com.aryputh.weatherapp.presentation.ui.theme.LightPrimary
-import com.aryputh.weatherapp.presentation.ui.theme.LightSecondary
+import com.aryputh.weatherapp.presentation.ui.theme.Primary
+import com.aryputh.weatherapp.presentation.ui.theme.Secondary
 import com.aryputh.weatherapp.presentation.ui.theme.Sunrise
 import com.aryputh.weatherapp.presentation.ui.theme.Sunset
 import com.aryputh.weatherapp.presentation.ui.theme.UVIndex
@@ -55,47 +53,57 @@ import com.aryputh.weatherapp.presentation.ui.theme.roboto_mono_family
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
+// Entry point of the app
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    // Create a weather model and permission launcher variable
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Request permissions like location for the app to run
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ) {
+        ){
             viewModel.loadWeatherInfo()
         }
         permissionLauncher.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
         ))
+
+        // Main content of the app
         setContent {
             WeatherAppTheme {
-                // A surface container using the 'background' color from the theme
+                // A surface container
                 Surface(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                        .fillMaxSize()
                 ){
+                    // Show day background by default
                     GradientBackground()
-                    WeatherPage(viewModel.state)
 
+                    // Detect if the data is loading and show screen accordingly
                     if(viewModel.state.isLoading) {
+                        // Show loading text and circular loading animation
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
+                            // Circular loading animation
                             CircularProgressIndicator(
                                 modifier = Modifier.size(64.dp),
-                                color = MaterialTheme.colorScheme.primary
+                                color = Primary
                             )
+
+                            // Loading text
                             Text(
                                 text = "Loading...",
-                                color = MaterialTheme.colorScheme.primary,
+                                color = Primary,
                                 fontSize = 15.sp,
                                 fontFamily = roboto_mono_family,
                                 fontWeight = FontWeight.Bold,
@@ -105,9 +113,10 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     viewModel.state.error?.let { error ->
+                        // If there is an error, show the error text and the error
                         Text(
                             text = error,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = Primary,
                             fontSize = 15.sp,
                             fontFamily = roboto_mono_family,
                             fontWeight = FontWeight.Normal,
@@ -115,14 +124,24 @@ class MainActivity : ComponentActivity() {
                                 .padding(all = 32.dp)
                         )
                     }
+
+                    // Make background gradient change based on if it's day or night
+                    viewModel.state.weatherInfo?.currentWeatherData?.let { data ->
+                        GradientBackgroundDynamic(data)
+                    }
+
+                    // Show the weather page, containing the rest of the UI
+                    WeatherPage(viewModel.state)
                 }
             }
         }
     }
 }
 
+// Contains the main components of the app's UI
 @Composable
 fun WeatherPage(state: WeatherState, modifier: Modifier = Modifier) {
+    // Organize everything into a column
     Column (
         modifier = modifier
             .fillMaxSize()
@@ -130,30 +149,44 @@ fun WeatherPage(state: WeatherState, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ){
+        // Using data, display different UI aspects
         state.weatherInfo?.currentWeatherData?.let { data ->
-            HeaderImage(data)
+            WeatherIcon(data)
             MainInfo(data)
             ItemTable(data)
         }
     }
 }
 
+// Displays a default gradient background
 @Composable
 fun GradientBackground(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
+            .background(LightBackground)
+    )
+}
+
+// Displays a gradient background, the color depending on day/night status
+@Composable
+fun GradientBackgroundDynamic(data: WeatherData, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
             .background(
-                if (isSystemInDarkTheme()) DarkBackground else LightBackground
+                // Set it to light background if it's day
+                if (data.isDay == 1) LightBackground else DarkBackground
             )
     )
 }
 
+// Show the weather icon, depending on current weather
 @Composable
-fun HeaderImage (data: WeatherData, modifier: Modifier = Modifier)
+fun WeatherIcon(data: WeatherData, modifier: Modifier = Modifier)
 {
     Image(
+        // Get icon depending on weather type
         painter = painterResource(id = data.weatherType.iconRes),
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        colorFilter = ColorFilter.tint(Primary),
         contentDescription = null,
         modifier = modifier
             .width(200.dp)
@@ -161,26 +194,31 @@ fun HeaderImage (data: WeatherData, modifier: Modifier = Modifier)
     )
 }
 
+// Contains all the main information in the app
 @Composable
 fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
 {
+    // Make everything into a column layout
     Column (
         modifier = modifier
             .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Row {
+            // Displays the current temperature
             Text(
                 text = "${(data.temperatureCelsius * 9 / 5 + 32).toInt()}",
-                color = MaterialTheme.colorScheme.primary,
+                color = Primary,
                 fontSize = 90.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Normal
             )
         }
+
+        // Displays the current weather
         Text(
             text = "~ ${data.weatherType.weatherDesc} ~",
-            color = MaterialTheme.colorScheme.primary,
+            color = Primary,
             fontSize = 15.sp,
             fontFamily = roboto_mono_family,
             fontWeight = FontWeight.Bold,
@@ -190,6 +228,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
     }
 }
 
+// Contains logic for the humidity, sunset/sunrise, and cloud cover
 @Composable
 fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
 {
@@ -198,16 +237,17 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
             .fillMaxWidth(0.9f)
             .clip(RoundedCornerShape(8.dp))
             .background(
-//                if (isSystemInDarkTheme()) DarkPrimary.copy(alpha = 0.3F) else LightPrimary.copy(alpha = 0.3F)
                 Color.Transparent
             )
     ){
+        // Row that shows the humidity and cloud cover
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier
                 .padding(vertical = 8.dp, horizontal = 32.dp)
                 .fillMaxWidth()
         ){
+            // Create an InfoItem to show humidity
             InfoItem(
                 iconRes = R.drawable.humidity,
                 title = "Humidity",
@@ -215,6 +255,8 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 color = Humidity,
                 modifier = modifier
             )
+
+            // Create an InfoItem to show cloud cover
             InfoItem(
                 iconRes = R.drawable.cloud_cover,
                 title = "Clouds",
@@ -224,20 +266,22 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
             )
         }
 
+        // Create a divider between top and bottom row
         Divider(
-//            color = if (isSystemInDarkTheme()) DarkPrimary.copy(alpha = 0.5F) else LightPrimary.copy(alpha = 0.5F),
-            color = LightPrimary.copy(alpha = 0.5F),
+            color = Primary.copy(alpha = 0.5F),
             modifier = modifier
                 .padding(horizontal = 16.dp)
                 .alpha(0.5F)
         )
 
+        // Row that shows the sunrise and sunset times
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier
                 .padding(vertical = 8.dp, horizontal = 32.dp)
                 .fillMaxWidth()
         ){
+            // Create an InfoItem to show sunrise time
             InfoItem(
                 iconRes = R.drawable.sunrise,
                 title = "Sunrise",
@@ -245,6 +289,8 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 color = Sunrise,
                 modifier = modifier
             )
+
+            // Create an InfoItem to show sunset time
             InfoItem(
                 iconRes = R.drawable.sunset,
                 title = "Sunset",
@@ -256,12 +302,14 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
     }
 }
 
+// The function to make an InfoItem
 @Composable
 fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: Color, modifier: Modifier)
 {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ){
+        // Creates an icon for the current InfoItem
         Image(
             painter = painterResource(id = iconRes),
             colorFilter = ColorFilter.tint(color),
@@ -271,20 +319,22 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
                 .padding(horizontal = 8.dp)
                 .width(40.dp)
         )
+
+        // Creates a title and subtitle for the current InfoItem
         Column {
             Text(
                 text = title,
-                color = MaterialTheme.colorScheme.primary,
+                color = Primary,
                 fontSize = 13.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier
                     .padding(top = 8.dp)
             )
+
             Text(
                 text = subtitle,
-                color =
-                    if (isSystemInDarkTheme()) DarkSecondary else LightSecondary,
+                color = Secondary,
                 fontSize = 13.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Normal,

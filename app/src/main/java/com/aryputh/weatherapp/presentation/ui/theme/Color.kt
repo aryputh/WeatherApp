@@ -3,9 +3,17 @@ package com.aryputh.weatherapp.presentation.ui.theme
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
+// Common theme colors
+val Primary = Color(0xFFFAF9F6)
+val Secondary = Color(0xFFEDEADE)
+
+// Icon colors
+val Humidity = Color(0xFFFAF9F6)
+val UVIndex = Color(0xFFFAF9F6)
+val Sunrise = Color(0xFFFAF9F6)
+val Sunset = Color(0xFFFAF9F6)
+
 // Dark theme colors
-val DarkPrimary = Color(0xFFF0F0F0)
-val DarkSecondary = Color(0xFFE0E0E0)
 val DarkUpperBackground = Color(0xFF8385D5)
 val DarkLowerBackground = Color(0xFF959BE5)
 val DarkBackground = Brush.verticalGradient(
@@ -15,8 +23,6 @@ val DarkBackground = Brush.verticalGradient(
 )
 
 // Light theme colors
-val LightPrimary = Color(0xFFF0F0F0)
-val LightSecondary = Color(0xFFE0E0E0)
 val LightUpperBackground = Color(0xFF68A6B9)
 val LightLowerBackground = Color(0xFF4FA7C2)
 val LightBackground = Brush.verticalGradient(
@@ -24,9 +30,3 @@ val LightBackground = Brush.verticalGradient(
     startY = 0F,
     endY = Float.POSITIVE_INFINITY
 )
-
-// Icon colors
-val Humidity = Color(0xFFF0F0F0)
-val UVIndex = Color(0xFFF0F0F0)
-val Sunrise = Color(0xFFF0F0F0)
-val Sunset = Color(0xFFF0F0F0)

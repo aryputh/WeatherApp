@@ -48,8 +48,8 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
     val dailyWeatherDataMap = dailyWeatherData.toWeatherData()
     val currentWeatherDataMap = currentWeatherData.toWeatherData()
 
-    val dailySunrise = dailyWeatherData.sunrise;
-    val dailySunset = dailyWeatherData.sunset;
+    val dailySunrise = dailyWeatherData.sunrise
+    val dailySunset = dailyWeatherData.sunset
 
     val formattedSunrise = parseAndFormatDateTime(dailySunrise?.firstOrNull() ?: "NULL")
     val formattedSunset = parseAndFormatDateTime(dailySunset?.firstOrNull() ?: "NULL")
