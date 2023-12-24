@@ -23,10 +23,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,18 +40,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aryputh.weatherapp.R
 import com.aryputh.weatherapp.domain.weather.WeatherData
-import com.aryputh.weatherapp.presentation.ui.theme.DarkBackground
-import com.aryputh.weatherapp.presentation.ui.theme.Humidity
-import com.aryputh.weatherapp.presentation.ui.theme.LightBackground
-import com.aryputh.weatherapp.presentation.ui.theme.Primary
-import com.aryputh.weatherapp.presentation.ui.theme.Secondary
-import com.aryputh.weatherapp.presentation.ui.theme.Sunrise
-import com.aryputh.weatherapp.presentation.ui.theme.Sunset
-import com.aryputh.weatherapp.presentation.ui.theme.UVIndex
+import com.aryputh.weatherapp.presentation.ui.theme.DayBackground
+import com.aryputh.weatherapp.presentation.ui.theme.IconColor
+import com.aryputh.weatherapp.presentation.ui.theme.NightBackground
+import com.aryputh.weatherapp.presentation.ui.theme.PrimaryText
+import com.aryputh.weatherapp.presentation.ui.theme.SecondaryText
 import com.aryputh.weatherapp.presentation.ui.theme.WeatherAppTheme
 import com.aryputh.weatherapp.presentation.ui.theme.roboto_mono_family
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
+import androidx.compose.animation.Animatable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.core.tween
 
 // Entry point of the app
 @AndroidEntryPoint
@@ -97,13 +97,13 @@ class MainActivity : ComponentActivity() {
                             // Circular loading animation
                             CircularProgressIndicator(
                                 modifier = Modifier.size(64.dp),
-                                color = Primary
+                                color = PrimaryText
                             )
 
                             // Loading text
                             Text(
                                 text = "Loading...",
-                                color = Primary,
+                                color = PrimaryText,
                                 fontSize = 15.sp,
                                 fontFamily = roboto_mono_family,
                                 fontWeight = FontWeight.Bold,
@@ -114,15 +114,32 @@ class MainActivity : ComponentActivity() {
                     }
                     viewModel.state.error?.let { error ->
                         // If there is an error, show the error text and the error
-                        Text(
-                            text = error,
-                            color = Primary,
-                            fontSize = 15.sp,
-                            fontFamily = roboto_mono_family,
-                            fontWeight = FontWeight.Normal,
-                            modifier = Modifier
-                                .padding(all = 32.dp)
-                        )
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            // Error text
+                            Text(
+                                text = "Error",
+                                color = PrimaryText,
+                                fontSize = 15.sp,
+                                fontFamily = roboto_mono_family,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp)
+                            )
+
+                            Text(
+                                text = error,
+                                color = PrimaryText,
+                                fontSize = 13.sp,
+                                fontFamily = roboto_mono_family,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier
+                                    .padding(horizontal = 32.dp)
+                            )
+                        }
                     }
 
                     // Make background gradient change based on if it's day or night
@@ -163,18 +180,29 @@ fun WeatherPage(state: WeatherState, modifier: Modifier = Modifier) {
 fun GradientBackground(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .background(LightBackground)
+            // Set the background to day time as the default
+            .background(DayBackground)
     )
 }
 
 // Displays a gradient background, the color depending on day/night status
 @Composable
 fun GradientBackgroundDynamic(data: WeatherData, modifier: Modifier = Modifier) {
+    val color = remember { Animatable(DayBackground) }
+
+    // Animates the background color
+    LaunchedEffect(Unit) {
+        color.animateTo(NightBackground, animationSpec = tween(1000))
+    }
+
     Box(
         modifier = modifier
             .background(
                 // Set it to light background if it's day
-                if (data.isDay == 1) LightBackground else DarkBackground
+                if (data.isDay == 1)
+                    DayBackground
+                else
+                    color.value
             )
     )
 }
@@ -186,7 +214,7 @@ fun WeatherIcon(data: WeatherData, modifier: Modifier = Modifier)
     Image(
         // Get icon depending on weather type
         painter = painterResource(id = data.weatherType.iconRes),
-        colorFilter = ColorFilter.tint(Primary),
+        colorFilter = ColorFilter.tint(PrimaryText),
         contentDescription = null,
         modifier = modifier
             .width(200.dp)
@@ -208,7 +236,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
             // Displays the current temperature
             Text(
                 text = "${(data.temperatureCelsius * 9 / 5 + 32).toInt()}",
-                color = Primary,
+                color = PrimaryText,
                 fontSize = 90.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Normal
@@ -218,7 +246,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
         // Displays the current weather
         Text(
             text = "~ ${data.weatherType.weatherDesc} ~",
-            color = Primary,
+            color = PrimaryText,
             fontSize = 15.sp,
             fontFamily = roboto_mono_family,
             fontWeight = FontWeight.Bold,
@@ -252,7 +280,7 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 iconRes = R.drawable.humidity,
                 title = "Humidity",
                 subtitle = "${data.humidity.roundToInt()}%",
-                color = Humidity,
+                color = IconColor,
                 modifier = modifier
             )
 
@@ -261,14 +289,14 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 iconRes = R.drawable.cloud_cover,
                 title = "Clouds",
                 subtitle = "${data.cloudCover.roundToInt()}%",
-                color = UVIndex,
+                color = IconColor,
                 modifier = modifier
             )
         }
 
         // Create a divider between top and bottom row
         Divider(
-            color = Primary.copy(alpha = 0.5F),
+            color = PrimaryText.copy(alpha = 0.5F),
             modifier = modifier
                 .padding(horizontal = 16.dp)
                 .alpha(0.5F)
@@ -286,7 +314,7 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 iconRes = R.drawable.sunrise,
                 title = "Sunrise",
                 subtitle = data.sunrise,
-                color = Sunrise,
+                color = IconColor,
                 modifier = modifier
             )
 
@@ -295,7 +323,7 @@ fun ItemTable(data: WeatherData, modifier: Modifier = Modifier)
                 iconRes = R.drawable.sunset,
                 title = "Sunset",
                 subtitle = data.sunset,
-                color = Sunset,
+                color = IconColor,
                 modifier = modifier
             )
         }
@@ -324,7 +352,7 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
         Column {
             Text(
                 text = title,
-                color = Primary,
+                color = PrimaryText,
                 fontSize = 13.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Bold,
@@ -334,7 +362,7 @@ fun InfoItem(@DrawableRes iconRes: Int, title: String, subtitle: String, color: 
 
             Text(
                 text = subtitle,
-                color = Secondary,
+                color = SecondaryText,
                 fontSize = 13.sp,
                 fontFamily = roboto_mono_family,
                 fontWeight = FontWeight.Normal,
