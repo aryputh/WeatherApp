@@ -39,35 +39,35 @@ sealed class WeatherTypes (val weatherDesc: String, @DrawableRes val iconRes: In
 
     object NightClear : WeatherTypes(
         weatherDesc = "Clear Sky",
-        iconRes = R.drawable.day_clear
+        iconRes = R.drawable.night_clear
     )
     object NightCloudy : WeatherTypes(
         weatherDesc = "Cloudy",
-        iconRes = R.drawable.day_cloudy
+        iconRes = R.drawable.night_cloudy
     )
     object NightFog : WeatherTypes(
         weatherDesc = "Foggy",
-        iconRes = R.drawable.day_fog
+        iconRes = R.drawable.night_fog
     )
     object NightDrizzle : WeatherTypes(
         weatherDesc = "Drizzle",
-        iconRes = R.drawable.day_drizzle
+        iconRes = R.drawable.night_drizzle
     )
     object NightFreezingDrizzle : WeatherTypes(
         weatherDesc = "Freezing Drizzle",
-        iconRes = R.drawable.day_freezing_drizzle
+        iconRes = R.drawable.night_freezing_drizzle
     )
     object NightRain : WeatherTypes(
         weatherDesc = "Rainy",
-        iconRes = R.drawable.day_rain
+        iconRes = R.drawable.night_rain
     )
     object NightSnow : WeatherTypes(
         weatherDesc = "Snowy",
-        iconRes = R.drawable.day_snow
+        iconRes = R.drawable.night_snow
     )
     object NightThunderstorm : WeatherTypes(
         weatherDesc = "Thunderstorm",
-        iconRes = R.drawable.day_thunderstorm
+        iconRes = R.drawable.night_thunderstorm
     )
 
     companion object {
