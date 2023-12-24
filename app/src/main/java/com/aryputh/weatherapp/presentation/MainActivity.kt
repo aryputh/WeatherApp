@@ -8,6 +8,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +18,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +27,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,9 +51,6 @@ import com.aryputh.weatherapp.presentation.ui.theme.WeatherAppTheme
 import com.aryputh.weatherapp.presentation.ui.theme.roboto_mono_family
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
-import androidx.compose.animation.Animatable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.animation.core.tween
 
 // Entry point of the app
 @AndroidEntryPoint
@@ -212,13 +211,12 @@ fun GradientBackgroundDynamic(data: WeatherData, modifier: Modifier = Modifier) 
 fun WeatherIcon(data: WeatherData, modifier: Modifier = Modifier)
 {
     Image(
-        // Get icon depending on weather type
+        // Get icon depending on weather type and set its color and size
         painter = painterResource(id = data.weatherType.iconRes),
         colorFilter = ColorFilter.tint(PrimaryText),
         contentDescription = null,
         modifier = modifier
-            .width(200.dp)
-            .height(200.dp)
+            .size(200.dp, 200.dp)
     )
 }
 
@@ -235,7 +233,7 @@ fun MainInfo(data: WeatherData, modifier: Modifier = Modifier)
         Row {
             // Displays the current temperature
             Text(
-                text = "${(data.temperatureCelsius * 9 / 5 + 32).toInt()}",
+                text = "${(data.temperatureCelsius * 1.8f + 32).roundToInt()}",
                 color = PrimaryText,
                 fontSize = 90.sp,
                 fontFamily = roboto_mono_family,
